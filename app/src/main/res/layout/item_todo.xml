@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/checkBox"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:src="@drawable/ic_checkbox"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imageViewPriority"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/support_separator" />
+
+    <ImageView
+        android:id="@+id/imageViewPriority"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        app:layout_constraintBottom_toBottomOf="@+id/checkBox"
+        app:layout_constraintStart_toEndOf="@+id/checkBox"
+        app:layout_constraintTop_toTopOf="@+id/checkBox" />
+
+    <ImageView
+        android:id="@+id/imageViewInfo"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/ic_info"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/label_tertiary" />
+
+    <TextView
+        android:id="@+id/textViewText"
+        style="@style/body_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="14dp"
+
+        android:layout_marginBottom="10dp"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:text="Text"
+        android:textColor="@color/label_primary"
+        app:layout_constraintBottom_toBottomOf="@+id/imageViewPriority"
+
+        app:layout_constraintEnd_toStartOf="@+id/imageViewInfo"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toEndOf="@+id/imageViewPriority"
+        app:layout_constraintTop_toTopOf="@+id/imageViewPriority"
+        app:layout_constraintWidth_default="wrap"
+        app:layout_constraintWidth_max="wrap" />
+
+    <TextView
+        android:id="@+id/textViewDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date"
+        style="@style/subhead_text"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/imageViewPriority"
+        app:layout_constraintTop_toBottomOf="@+id/textViewText"
+        android:layout_marginBottom="14dp"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

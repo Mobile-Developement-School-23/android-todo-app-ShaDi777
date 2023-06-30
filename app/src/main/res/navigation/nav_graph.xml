@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/fragmentListToDo">
+
+    <fragment
+        android:id="@+id/fragmentListToDo"
+        android:name="com.shadi777.todoapp.screen.FragmentListToDo"
+        android:label="fragment_list_to_do"
+        tools:layout="@layout/fragment_list_to_do" >
+        <action
+            android:id="@+id/action_fragmentListToDo_to_fragmentCreateToDo"
+            app:destination="@id/fragmentCreateToDo" />
+        <argument
+            android:name="TodoItem"
+            app:argType="com.shadi777.todoapp.recyclerview.data.TodoItem" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentCreateToDo"
+        android:name="com.shadi777.todoapp.screen.FragmentCreateToDo"
+        android:label="fragment_create_to_do"
+        tools:layout="@layout/fragment_create_to_do" >
+        <action
+            android:id="@+id/action_fragmentCreateToDo_to_fragmentListToDo"
+            app:destination="@id/fragmentListToDo" />
+        <argument
+            android:name="TodoItem"
+            app:argType="com.shadi777.todoapp.recyclerview.data.TodoItem" />
+    </fragment>
+</navigation>
