@@ -16,7 +16,6 @@ object RetrofitInstance {
     private val httpClient by lazy {
         OkHttpClient.Builder()
             .addInterceptor(makeLoggingInterceptor())
-            .addInterceptor(ConnectivityInterceptor(Glo))
             .addInterceptor { chain ->
             val original = chain.request()
             val request = original.newBuilder()
