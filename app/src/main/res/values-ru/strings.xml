@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Список дел</string>
+
+    <!-- Main Activity -->
+    <string name="large_title">Мои дела</string>
+    <string name="done_sublabel">"Выполнено — %d</string>
+    <string name="new_task">Новое дело</string>
+
+    <!-- Create new task activity -->
+    <string name="save_button">Сохранить</string>
+    <string name="delete_button">Удалить</string>
+    <string name="priority">Важность</string>
+    <string name="no_priority">Нет</string>
+    <string name="low_priority">Низкий</string>
+    <string name="high_priority">Высокий</string>
+    <string name="finish_until">Сделать до</string>
+    <string name="edit_text_hint">Что нужно сделать…</string>
+    <string name="add_task_button">Добавить дело</string>
+
+    <string-array name="priorities">
+        <item>Обычный</item>
+        <item>Низкий</item>
+        <item>Высокий</item>
+    </string-array>
+
+    <string-array name="MONTHS">
+        <item>января</item>
+        <item>февраля</item>
+        <item>марта</item>
+        <item>апреля</item>
+        <item>мая</item>
+        <item>июня</item>
+        <item>июля</item>
+        <item>августа</item>
+        <item>сентября</item>
+        <item>октября</item>
+        <item>ноября</item>
+    </string-array>
+</resources>
