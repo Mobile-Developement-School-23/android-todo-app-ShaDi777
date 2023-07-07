@@ -18,6 +18,15 @@
     <string name="edit_text_hint">Что нужно сделать…</string>
     <string name="add_task_button">Добавить дело</string>
 
+    <!-- Network info -->
+    <string name="sync_error">Ошибка синхронизации</string>
+    <string name="auth_error">Ошибка авторизации</string>
+    <string name="no_element_error">Элемент не найден на сервере</string>
+    <string name="server_error">Ошибка сервера</string>
+    <string name="retry_snackbar">Попробовать снова</string>
+    <string name="internet_found">Подключено к интернету</string>
+    <string name="internet_not_found">Нет подключения к интернету</string>
+
     <string-array name="priorities">
         <item>Обычный</item>
         <item>Низкий</item>

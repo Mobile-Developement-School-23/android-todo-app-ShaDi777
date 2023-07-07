@@ -4,13 +4,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-
+import com.shadi777.todoapp.data_sources.models.TodoItem
 import com.shadi777.todoapp.databinding.ItemTodoBinding
-import com.shadi777.todoapp.recyclerview.data.TodoItem
-//import com.shadi777.todoapp.recyclerview.data.TodoItemsRepository.Companion.itemlist
 
-
-class TodoAdapter : ListAdapter<TodoItem, TodoItemViewHolder>(DiffCallback) {
+/**
+ * Class for recycler view adapter that is used in FragmentListToDo
+ */
+class TodoAdapter(
+    private val itemInteractListener: onItemInteractListener
+) : ListAdapter<TodoItem, TodoItemViewHolder>(DiffCallback) {
 
     companion object {
         private val DiffCallback = object : DiffUtil.ItemCallback<TodoItem>() {
@@ -24,17 +26,15 @@ class TodoAdapter : ListAdapter<TodoItem, TodoItemViewHolder>(DiffCallback) {
         }
     }
 
-    private var onItemChangeListener: (() -> Unit)? = null
-
-    fun setOnChangeItemListener(listener: () -> Unit) {
-        onItemChangeListener = listener
+    interface onItemInteractListener {
+        fun onItemClickListener(item: TodoItem)
+        fun onCheckboxClickListener(item: TodoItem)
     }
-
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoItemViewHolder {
         val binding = ItemTodoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return TodoItemViewHolder(binding, onItemChangeListener)
+        return TodoItemViewHolder(binding, itemInteractListener)
     }
 
     override fun onBindViewHolder(holder: TodoItemViewHolder, position: Int) {

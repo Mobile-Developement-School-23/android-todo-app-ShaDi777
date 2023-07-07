@@ -1,51 +1,52 @@
 package com.shadi777.todoapp.screen
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.shadi777.todoapp.App
-import com.shadi777.todoapp.screen.FragmentListToDoDirections
+import com.google.android.material.snackbar.Snackbar
 import com.shadi777.todoapp.R
-
+import com.shadi777.todoapp.data_sources.models.TodoItem
+import com.shadi777.todoapp.data_sources.models.TodoItemViewModel
+import com.shadi777.todoapp.data_sources.models.TodoListViewModel
 import com.shadi777.todoapp.databinding.FragmentListToDoBinding
 import com.shadi777.todoapp.recyclerview.TodoAdapter
-import com.shadi777.todoapp.recyclerview.data.Action
-import com.shadi777.todoapp.recyclerview.data.Priority
-import com.shadi777.todoapp.recyclerview.data.SharedTodoItem
-import com.shadi777.todoapp.recyclerview.data.TodoItem
-import com.shadi777.todoapp.recyclerview.data.TodoItemsRepository
-import kotlinx.coroutines.CoroutineDispatcher
-// import com.shadi777.todoapp.recyclerview.data.TodoItemsRepository.Companion.idIterator
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import com.shadi777.todoapp.recyclerview.TodoAdapter.onItemInteractListener
+import com.shadi777.todoapp.util.Constants
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
-import java.util.Date
 
-
+/**
+ * Fragment for list of all tasks. Used as a main fragment
+ */
 class FragmentListToDo : Fragment() {
 
-    private lateinit var recyclerView: RecyclerView
-    private val todoAdapter = TodoAdapter()
+    private val todoAdapter = TodoAdapter(
+        itemInteractListener = object : onItemInteractListener {
+            override fun onItemClickListener(item: TodoItem) {
+                editItem(item)
+            }
 
-    private val todoItemsRepository by lazy { App.get(requireContext()).todoItemsRepository }
-    private var isDoneVisible = true
+            override fun onCheckboxClickListener(item: TodoItem) {
+                listViewModel.updateItem(item.copy(isDone = !item.isDone))
+            }
+
+        }
+    )
 
     private var _binding: FragmentListToDoBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: SharedTodoItem
+    private val itemViewModel: TodoItemViewModel by lazy {
+        (requireActivity() as MainActivity).itemViewModel
+    }
+    private val listViewModel: TodoListViewModel by lazy {
+        (requireActivity() as MainActivity).listViewModel
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,97 +62,95 @@ class FragmentListToDo : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initRecyclerView()
-
-        viewModel = ViewModelProvider(requireActivity()).get(SharedTodoItem::class.java)
-        viewModel.action.observe(viewLifecycleOwner, Observer<Action> { receivedAction ->
-            when (receivedAction) {
-                Action.SAVE_NEW -> {
-                    //CoroutineScope(Dispatchers.IO).launch {
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        todoItemsRepository.addTodoItem(viewModel.todoItem.value!!)
-                        todoAdapter.submitList(todoItemsRepository.getTasks(isDoneVisible))
-                    }
-                }
-
-                Action.DELETE -> {
-                    //CoroutineScope(Dispatchers.IO).launch {
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        todoItemsRepository.removeTodoItem(viewModel.todoItem.value!!)
-                        todoAdapter.submitList(todoItemsRepository.getTasks(isDoneVisible))
-                    }
-                }
-
-                Action.SAVE_CHANGE -> {
-                    //CoroutineScope(Dispatchers.IO).launch {
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        todoItemsRepository.updateTodoItem(viewModel.todoItem.value!!)
-                        todoAdapter.submitList(todoItemsRepository.getTasks(isDoneVisible))
-                    }
-                }
-
-                else -> {}
-            }
-        })
+        initDataObserver()
+        initVisibilityChanger()
+        initSnackbar()
 
         binding.buttonAddTask.setOnClickListener {
-            val todoItem =
-                TodoItem(
-                    todoItemsRepository.idIterator.toString(),
-                    "",
-                    Priority.Default,
-                    false,
-                    Date().time,
-                    Date().time
-                )
-            val action =
-                FragmentListToDoDirections.actionFragmentListToDoToFragmentCreateToDo(todoItem)
-            Navigation.findNavController(view).navigate(action)
+            itemViewModel.selectItem(null)
+
+            Navigation.findNavController(view).navigate(
+                R.id.action_fragmentListToDo_to_fragmentCreateToDo
+            )
         }
 
-
-
-        binding.textViewDone.text = String.format(
-            getResources().getString(R.string.done_sublabel),
-            todoItemsRepository.countDone()
-        )
-
-        setVisibleTasksAndIcon(isDoneVisible)
-
         binding.imageViewVisible.setOnClickListener {
-            isDoneVisible = !isDoneVisible
-            setVisibleTasksAndIcon(isDoneVisible)
+            listViewModel.changeStateVisibility()
         }
     }
 
     private fun initRecyclerView() {
-        recyclerView = binding.recyclerView
+        val recyclerView = binding.recyclerView
         recyclerView.adapter = todoAdapter
-        recyclerView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
+        val layoutManager =
+            LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, true)
+        layoutManager.stackFromEnd = true
+        recyclerView.layoutManager = layoutManager
 
-        todoAdapter.setOnChangeItemListener {
-            binding.textViewDone.text = String.format(
-                getResources().getString(R.string.done_sublabel),
-                todoItemsRepository.countDone()
-            )
-
-            todoAdapter.submitList(todoItemsRepository.getTasks(isDoneVisible))
-        }
 
         binding.pullToRefresh.setOnRefreshListener {
-            lifecycleScope.launch(Dispatchers.IO) {
-                todoItemsRepository.loadFromServer()
-                binding.pullToRefresh.isRefreshing = false
+            viewLifecycleOwner.lifecycleScope.launch {
+                listViewModel.refreshData()
+            }
+            binding.pullToRefresh.isRefreshing = false
+        }
+    }
+
+    private fun initDataObserver() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            listViewModel.items.collect { items ->
+                todoAdapter.submitList(items)
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            listViewModel.doneItemsSize.collect {
+                binding.textViewDone.text = String.format(
+                    getResources().getString(R.string.done_sublabel),
+                    it
+                )
             }
         }
     }
 
-    private fun setVisibleTasksAndIcon(isDoneVisible: Boolean) {
-        when (isDoneVisible) {
-            true -> binding.imageViewVisible.setImageResource(R.drawable.ic_visibility)
-            else -> binding.imageViewVisible.setImageResource(R.drawable.ic_visibility_off)
+    private fun initVisibilityChanger() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            listViewModel.visibility.collect { isVisible ->
+                binding.imageViewVisible.setImageResource(
+                    if (isVisible) R.drawable.ic_visibility
+                    else R.drawable.ic_visibility_off
+                )
+            }
         }
-        todoAdapter.submitList(todoItemsRepository.getTasks(isDoneVisible))
     }
+
+    private fun initSnackbar() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            listViewModel.getStatusCode().collect { statusCode ->
+                if (statusCode == Constants.OK_STATUS_CODE) return@collect
+                Snackbar.make(
+                    binding.root.rootView,
+                    when (statusCode) {
+                        Constants.SYNC_ERROR_STATUS_CODE -> getString(R.string.sync_error)
+                        Constants.AUTH_ERROR_STATUS_CODE -> getString(R.string.auth_error)
+                        Constants.NO_ELEMENT_STATUS_CODE -> getString(R.string.no_element_error)
+                        Constants.SERVER_ERROR_STATUS_CODE -> getString(R.string.server_error)
+                        else -> getString(R.string.internet_not_found)
+                    },
+                    Snackbar.LENGTH_LONG
+                ).setAction(getString(R.string.retry_snackbar)) {
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        listViewModel.refreshData()
+                    }
+                }.show()
+            }
+        }
+    }
+
+    private fun editItem(item: TodoItem) {
+        itemViewModel.selectItem(item.id)
+        findNavController().navigate(R.id.action_fragmentListToDo_to_fragmentCreateToDo)
+    }
+
 
     override fun onPause() {
         super.onPause()
