@@ -13,9 +13,6 @@
         <action
             android:id="@+id/action_fragmentListToDo_to_fragmentCreateToDo"
             app:destination="@id/fragmentCreateToDo" />
-        <argument
-            android:name="TodoItem"
-            app:argType="com.shadi777.todoapp.recyclerview.data.TodoItem" />
     </fragment>
     <fragment
         android:id="@+id/fragmentCreateToDo"
@@ -25,8 +22,5 @@
         <action
             android:id="@+id/action_fragmentCreateToDo_to_fragmentListToDo"
             app:destination="@id/fragmentListToDo" />
-        <argument
-            android:name="TodoItem"
-            app:argType="com.shadi777.todoapp.recyclerview.data.TodoItem" />
     </fragment>
 </navigation>
