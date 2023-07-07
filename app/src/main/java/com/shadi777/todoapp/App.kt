@@ -2,31 +2,21 @@ package com.shadi777.todoapp
 
 import android.app.Application
 import android.content.Context
-import com.shadi777.todoapp.data_sources.repositories.DatabaseDataSource
-import com.shadi777.todoapp.data_sources.repositories.NetworkDataSource
-import com.shadi777.todoapp.data_sources.repositories.TodoItemsRepositoryImpl
-import com.shadi777.todoapp.database.TodoItemsDatabase
+import com.shadi777.todoapp.di.components.AppComponent
+import com.shadi777.todoapp.di.components.DaggerAppComponent
+import com.shadi777.todoapp.di.modules.AppModule
 
 
 class App : Application() {
 
-    private val database by lazy {
-        TodoItemsDatabase.getDatabase(this)
-    }
-    private val networkDataSource by lazy {
-        NetworkDataSource()
-    }
-    private val databaseDataSource by lazy {
-        DatabaseDataSource(
-            database.todoItemsDAO()
-        )
-    }
+    lateinit var appComponent: AppComponent
 
-    val todoItemsRepository by lazy {
-        TodoItemsRepositoryImpl(
-            databaseDataSource,
-            networkDataSource
-        )
+    override fun onCreate() {
+        super.onCreate()
+        appComponent = DaggerAppComponent
+                        .builder()
+                        .appModule(AppModule(applicationContext))
+                        .build()
     }
 
     companion object {

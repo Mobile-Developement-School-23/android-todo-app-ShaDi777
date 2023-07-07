@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.shadi777.todoapp.data_sources.repositories.TodoItemsRepository
 import com.shadi777.todoapp.util.Constants
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,9 +26,28 @@ import kotlinx.coroutines.launch
  * @property[statusCode] Holds last received response status code,
  * can be accessed by [getStatusCode] function
  */
-class TodoListViewModel(
+class TodoListViewModel
+@AssistedInject constructor(
     private val repository: TodoItemsRepository
 ) : ViewModel() {
+
+    @AssistedFactory
+    interface TodoListViewModelFactory {
+        fun create(): TodoListViewModel
+    }
+
+    class Factory(
+        private val factory: TodoListViewModelFactory
+    ) : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(TodoListViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return factory.create() as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class")
+        }
+    }
+
     private val _visibility: MutableStateFlow<Boolean> = MutableStateFlow(true)
     val visibility: StateFlow<Boolean> = _visibility
 
@@ -39,7 +60,7 @@ class TodoListViewModel(
     private val _items: MutableStateFlow<List<TodoItem>> = MutableStateFlow(emptyList())
     val items: StateFlow<List<TodoItem>> = _items
 
-    private val statusCode : MutableStateFlow<Int> = MutableStateFlow(Constants.OK_STATUS_CODE)
+    private val statusCode: MutableStateFlow<Int> = MutableStateFlow(Constants.OK_STATUS_CODE)
 
     init {
         observeItems()
@@ -49,7 +70,11 @@ class TodoListViewModel(
 
     private fun observeItems() {
         viewModelScope.launch(Dispatchers.IO) {
-            combine(repository.getItems(), repository.getUndoneItems(), visibility) { items, undoneItems, isVisible ->
+            combine(
+                repository.getItems(),
+                repository.getUndoneItems(),
+                visibility
+            ) { items, undoneItems, isVisible ->
                 if (isVisible) {
                     items
                 } else {
@@ -95,21 +120,9 @@ class TodoListViewModel(
         }
     }
 
-    fun getStatusCode() : StateFlow<Int> = statusCode
+    fun getStatusCode(): StateFlow<Int> = statusCode
 
     fun changeStateVisibility() {
         _visibility.value = !_visibility.value
-    }
-}
-
-
-class TodoListViewModelFactory(private val repository: TodoItemsRepository) :
-    ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(TodoListViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return TodoListViewModel(repository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

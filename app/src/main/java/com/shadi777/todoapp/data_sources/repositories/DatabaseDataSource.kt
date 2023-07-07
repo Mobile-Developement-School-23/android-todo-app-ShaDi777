@@ -6,13 +6,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
 /**
  * Class that provides access to database data
  *
  * @param[todoItemsDAO] object that is used to interact with database
  */
-class DatabaseDataSource(
+class DatabaseDataSource
+@Inject constructor(
     private val todoItemsDAO: TodoItemsDAO
 ) {
     suspend fun getItems(): List<TodoItem> {

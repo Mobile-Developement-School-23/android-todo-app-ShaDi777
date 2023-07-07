@@ -4,6 +4,7 @@ import com.shadi777.todoapp.data_sources.models.TodoItem
 import com.shadi777.todoapp.util.Constants
 import kotlinx.coroutines.flow.Flow
 import java.lang.Exception
+import javax.inject.Inject
 
 /**
  * Implementation of repository interface.
@@ -11,7 +12,8 @@ import java.lang.Exception
  * @param[databaseDataSource] is used to interact with database
  * @param[networkDataSource] is used to interact with server
  */
-class TodoItemsRepositoryImpl(
+class TodoItemsRepositoryImpl
+@Inject constructor(
     private val databaseDataSource: DatabaseDataSource,
     private val networkDataSource: NetworkDataSource
 ) : TodoItemsRepository {

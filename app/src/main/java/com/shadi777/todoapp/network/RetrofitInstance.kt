@@ -1,6 +1,10 @@
 package com.shadi777.todoapp.network
 
+import com.shadi777.todoapp.di.AppScope
 import com.shadi777.todoapp.util.Constants
+import dagger.Binds
+import dagger.Module
+import dagger.Provides
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -9,6 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 /**
  * Object that is used to initiate Retrofit for interacting with server
  */
+@Module
 object RetrofitInstance {
 
     private val httpClient by lazy {
@@ -41,5 +46,12 @@ object RetrofitInstance {
         logging.level = HttpLoggingInterceptor.Level.BODY
         return logging
     }
+
+    @AppScope
+    @Provides
+    fun provideRetrofitClient(): Retrofit = retrofit
+
+    @Provides
+    fun provideTodoApiService(): TodoAPI = api
 
 }

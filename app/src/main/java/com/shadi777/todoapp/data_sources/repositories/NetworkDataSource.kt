@@ -10,6 +10,7 @@ import com.shadi777.todoapp.network.data.TodoListResponse
 import com.shadi777.todoapp.util.Constants
 import retrofit2.Response
 import java.lang.Exception
+import javax.inject.Inject
 
 /**
  * Class that provides access to remote data
@@ -17,8 +18,10 @@ import java.lang.Exception
  * @property[api] Object that is used to interact with server
  * @property[lastRevision] Last revision received from a server. It is used to send new requests
  */
-class NetworkDataSource {
-    private val api: TodoAPI = RetrofitInstance.api
+class NetworkDataSource
+@Inject constructor(
+    private val api: TodoAPI
+) {
     private var lastRevision: Int = 0
 
     suspend fun getItemById(itemId: String): Response<TodoItemResponse> {

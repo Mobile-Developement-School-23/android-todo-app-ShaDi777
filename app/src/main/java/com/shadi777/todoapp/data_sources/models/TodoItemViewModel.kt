@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.shadi777.todoapp.data_sources.repositories.TodoItemsRepository
 import com.shadi777.todoapp.util.Constants
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,9 +23,26 @@ import kotlinx.coroutines.launch
  * @property[statusCode] Holds last received response status code,
  * can be accessed by [getStatusCode] function
  */
-class TodoItemViewModel(
+class TodoItemViewModel
+@AssistedInject constructor(
     private val repository: TodoItemsRepository
 ) : ViewModel() {
+
+    @AssistedFactory
+    interface TodoItemViewModelFactory {
+        fun create(): TodoItemViewModel
+    }
+    class Factory(
+        private val factory: TodoItemViewModelFactory
+        ) : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(TodoItemViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return factory.create() as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class")
+        }
+    }
 
     private val selectedItem: MutableStateFlow<TodoItem?> = MutableStateFlow(null)
     fun getSelectedItem(): StateFlow<TodoItem?> = selectedItem
@@ -56,16 +75,5 @@ class TodoItemViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             statusCode.value = repository.updateItem(item)
         }
-    }
-}
-
-class TodoItemViewModelFactory(private val repository: TodoItemsRepository) :
-    ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(TodoItemViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return TodoItemViewModel(repository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
