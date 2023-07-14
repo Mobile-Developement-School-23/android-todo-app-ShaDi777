@@ -9,6 +9,7 @@
     <!-- Create new task activity -->
     <string name="save_button">Save</string>
     <string name="delete_button">Delete</string>
+    <string name="cancel_button">Cancel</string>
     <string name="priority">Priority</string>
     <string name="no_priority">No</string>
     <string name="low_priority">Low</string>
@@ -28,8 +29,8 @@
 
 
     <string-array name="priorities">
-        <item>Default</item>
         <item>Low</item>
+        <item>Default</item>
         <item>High</item>
     </string-array>
 

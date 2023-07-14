@@ -1,24 +1,24 @@
-package com.shadi777.todoapp.screen
+package com.shadi777.todoapp.ui.screen.CreateTaskScreen
 
-import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import androidx.core.content.ContextCompat
+import androidx.compose.material3.Text
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
-import com.shadi777.todoapp.R
 import com.shadi777.todoapp.data_sources.models.Priority
 import com.shadi777.todoapp.data_sources.models.TodoItem
 import com.shadi777.todoapp.data_sources.models.TodoItemViewModel
 import com.shadi777.todoapp.data_sources.models.TodoListViewModel
 import com.shadi777.todoapp.databinding.FragmentCreateToDoBinding
-import java.time.ZoneId
-import java.util.Calendar
-import java.util.Date
-import java.util.UUID
+import com.shadi777.todoapp.ui.core.AppTheme
+import com.shadi777.todoapp.ui.screen.CreateTaskScreen.components.CreateTodoScreen
+import com.shadi777.todoapp.ui.screen.MainActivity
+
 
 
 /**
@@ -29,15 +29,12 @@ class FragmentCreateToDo : Fragment() {
     private var _binding: FragmentCreateToDoBinding? = null
     private val binding get() = _binding!!
 
-    //private lateinit var viewModel: SharedTodoItem
     private val itemViewModel: TodoItemViewModel by lazy {
         (requireActivity() as MainActivity).itemViewModel
     }
     private val listViewModel: TodoListViewModel by lazy {
         (requireActivity() as MainActivity).listViewModel
     }
-
-    // private val args: FragmentCreateToDoArgs by navArgs<FragmentCreateToDoArgs>()
 
 
     override fun onCreateView(
@@ -49,6 +46,23 @@ class FragmentCreateToDo : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.composeView.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
+        binding.composeView.setContent {
+            AppTheme {
+                val item by itemViewModel.getSelectedItem().collectAsState()
+                CreateTodoScreen(
+                    itemViewModel.isUpdating,
+                    item,
+                    itemViewModel::onAction,
+                    { Navigation.findNavController(view).navigateUp() }
+                )
+            }
+        }
+    }
+/*
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -75,7 +89,6 @@ class FragmentCreateToDo : Fragment() {
         }
 
         binding.editText.setText(item.text)
-
     }
 
     private fun initSpinnerPriority(item: TodoItem) {
@@ -174,7 +187,7 @@ class FragmentCreateToDo : Fragment() {
             Navigation.findNavController(it).navigateUp()
         }
     }
-
+*/
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

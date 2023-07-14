@@ -10,6 +10,7 @@
     <!-- Create new task activity -->
     <string name="save_button">Сохранить</string>
     <string name="delete_button">Удалить</string>
+    <string name="cancel_button">Закрыть</string>
     <string name="priority">Важность</string>
     <string name="no_priority">Нет</string>
     <string name="low_priority">Низкий</string>

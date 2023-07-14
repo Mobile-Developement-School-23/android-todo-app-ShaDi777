@@ -1,4 +1,4 @@
-package com.shadi777.todoapp.screen
+package com.shadi777.todoapp.ui.screen
 
 import android.os.Bundle
 import android.view.LayoutInflater

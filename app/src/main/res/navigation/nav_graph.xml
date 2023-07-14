@@ -7,20 +7,30 @@
 
     <fragment
         android:id="@+id/fragmentListToDo"
-        android:name="com.shadi777.todoapp.screen.FragmentListToDo"
+        android:name="com.shadi777.todoapp.ui.screen.FragmentListToDo"
         android:label="fragment_list_to_do"
         tools:layout="@layout/fragment_list_to_do" >
         <action
             android:id="@+id/action_fragmentListToDo_to_fragmentCreateToDo"
-            app:destination="@id/fragmentCreateToDo" />
+            app:destination="@id/fragmentCreateToDo"
+
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/stay"
+            app:popExitAnim="@anim/slide_out"
+            app:launchSingleTop="true"
+            />
     </fragment>
+
     <fragment
         android:id="@+id/fragmentCreateToDo"
-        android:name="com.shadi777.todoapp.screen.FragmentCreateToDo"
+        android:name="com.shadi777.todoapp.ui.screen.CreateTaskScreen.FragmentCreateToDo"
         android:label="fragment_create_to_do"
         tools:layout="@layout/fragment_create_to_do" >
         <action
             android:id="@+id/action_fragmentCreateToDo_to_fragmentListToDo"
-            app:destination="@id/fragmentListToDo" />
+            app:destination="@id/fragmentListToDo"
+
+
+            />
     </fragment>
 </navigation>
