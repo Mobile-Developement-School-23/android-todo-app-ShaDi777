@@ -33,6 +33,10 @@
     <string name="internet_found"> Connected to the internet </string>
     <string name="internet_not_found"> No internet connection </string>
 
+    <!-- Restore Snackbar -->
+    <string name="restore_button">Restore</string>
+    <string name="snackbar_delete_text">Deleted task </string>
+
     <!-- Shared Preferences keys -->
     <string name="settings_key" translatable="false">settings_key</string>
     <string name="theme_mode_key" translatable="false">theme_mode_key</string>

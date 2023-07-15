@@ -51,4 +51,6 @@
     <string name="light_mode">Светлая</string>
     <string name="dark_mode">Темная</string>
     <string name="system_mode">Системная</string>
+    <string name="restore_button">Восстановить</string>
+    <string name="snackbar_delete_text">"Удалено дело "</string>
 </resources>

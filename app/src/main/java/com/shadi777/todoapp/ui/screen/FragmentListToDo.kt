@@ -65,7 +65,8 @@ class FragmentListToDo : Fragment() {
         initRecyclerView()
         initDataObserver()
         initVisibilityChanger()
-        initSnackbar()
+        initConnectionSnackbar()
+        initDeleteSnackbar()
 
         binding.imageSettings.setOnClickListener {
             val settings = FragmentSettings()
@@ -129,7 +130,7 @@ class FragmentListToDo : Fragment() {
         }
     }
 
-    private fun initSnackbar() {
+    private fun initConnectionSnackbar() {
         viewLifecycleOwner.lifecycleScope.launch {
             listViewModel.getStatusCode().collect { statusCode ->
                 if (statusCode == Constants.OK_STATUS_CODE) return@collect
@@ -146,6 +147,23 @@ class FragmentListToDo : Fragment() {
                 ).setAction(getString(R.string.retry_snackbar)) {
                     viewLifecycleOwner.lifecycleScope.launch {
                         listViewModel.refreshData()
+                    }
+                }.show()
+            }
+        }
+    }
+
+    private fun initDeleteSnackbar() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            itemViewModel.getDeletedItem().collect { item ->
+                if (item == null) return@collect
+                Snackbar.make(
+                    binding.root.rootView,
+                    getString(R.string.snackbar_delete_text) + " " + item.text,
+                    Snackbar.LENGTH_LONG
+                ).setAction(getString(R.string.restore_button)) {
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        itemViewModel.addItem(item)
                     }
                 }.show()
             }

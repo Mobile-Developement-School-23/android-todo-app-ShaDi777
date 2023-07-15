@@ -66,6 +66,10 @@ class TodoItemViewModel
         )
     fun getSelectedItem(): StateFlow<TodoItem> = selectedItem.asStateFlow()
 
+    private val deletedItem: MutableStateFlow<TodoItem?> = MutableStateFlow(null)
+
+    fun getDeletedItem(): StateFlow<TodoItem?> = deletedItem.asStateFlow()
+
     private val statusCode: MutableStateFlow<Int> = MutableStateFlow(Constants.OK_STATUS_CODE)
     fun getStatusCode(): StateFlow<Int> = statusCode
 
@@ -120,7 +124,10 @@ class TodoItemViewModel
                 if (isUpdating) updateItem(item = selectedItem.value)
                 else addItem(item = selectedItem.value)
             }
-            is TodoAction.DeleteTask -> deleteItem(selectedItem.value.id)
+            is TodoAction.DeleteTask ->{
+                deletedItem.value = selectedItem.value
+                deleteItem(selectedItem.value.id)
+            }
         }
     }
 }
