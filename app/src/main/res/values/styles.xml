@@ -73,4 +73,21 @@
     </style>
 
 
+    <!-- Snackbar style -->
+    <style name="Widget.App.Snackbar" parent="Widget.MaterialComponents.Snackbar">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Snackbar</item>
+        <item name="actionTextColorAlpha">1</item>
+        <item name="android:layout_margin">24dp</item>
+        <item name="cornerRadius">10dp</item>
+    </style>
+
+    <style name="Widget.App.SnackbarButton" parent="Widget.MaterialComponents.Button.TextButton.Snackbar">
+        <item name="android:textColor">@color/color_blue</item>
+    </style>
+
+    <style name="ThemeOverlay.App.Snackbar" parent="">
+        <item name="colorPrimary">@color/label_primary</item>
+        <item name="colorOnSurface">@color/label_primary</item>
+    </style>
+
 </resources>

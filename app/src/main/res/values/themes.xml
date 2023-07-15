@@ -29,5 +29,7 @@
         <item name="colorAccent">@color/color_blue</item>
 
         <item name="bottomSheetDialogTheme">@style/BottomSheetDialogTheme</item>
+        <item name="snackbarStyle">@style/Widget.App.Snackbar</item>
+        <item name="snackbarButtonStyle">@style/Widget.App.SnackbarButton</item>
     </style>
 </resources>

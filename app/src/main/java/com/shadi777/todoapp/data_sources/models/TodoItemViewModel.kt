@@ -38,9 +38,10 @@ class TodoItemViewModel
     interface TodoItemViewModelFactory {
         fun create(): TodoItemViewModel
     }
+
     class Factory(
         private val factory: TodoItemViewModelFactory
-        ) : ViewModelProvider.Factory {
+    ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(TodoItemViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
@@ -64,11 +65,16 @@ class TodoItemViewModel
                 changeDate = Date().time
             )
         )
+
     fun getSelectedItem(): StateFlow<TodoItem> = selectedItem.asStateFlow()
 
     private val deletedItem: MutableStateFlow<TodoItem?> = MutableStateFlow(null)
 
     fun getDeletedItem(): StateFlow<TodoItem?> = deletedItem.asStateFlow()
+
+    fun clearDeletedItem() {
+        deletedItem.value = null
+    }
 
     private val statusCode: MutableStateFlow<Int> = MutableStateFlow(Constants.OK_STATUS_CODE)
     fun getStatusCode(): StateFlow<Int> = statusCode
@@ -89,6 +95,7 @@ class TodoItemViewModel
                         )
                     isUpdating = false
                 }
+
                 else -> {
                     selectedItem.value = repository.getItemById(id)
                     isUpdating = true
@@ -116,7 +123,7 @@ class TodoItemViewModel
     }
 
     fun onAction(action: TodoAction) {
-        when(action) {
+        when (action) {
             is TodoAction.UpdateText -> selectedItem.update { it.copy(text = action.text) }
             is TodoAction.UpdatePriority -> selectedItem.update { it.copy(priority = action.priority) }
             is TodoAction.UpdateDate -> selectedItem.update { it.copy(deadlineDate = action.date) }
@@ -124,7 +131,8 @@ class TodoItemViewModel
                 if (isUpdating) updateItem(item = selectedItem.value)
                 else addItem(item = selectedItem.value)
             }
-            is TodoAction.DeleteTask ->{
+
+            is TodoAction.DeleteTask -> {
                 deletedItem.value = selectedItem.value
                 deleteItem(selectedItem.value.id)
             }

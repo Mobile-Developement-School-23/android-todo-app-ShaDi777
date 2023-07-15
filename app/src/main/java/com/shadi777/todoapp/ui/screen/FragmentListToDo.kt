@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.shadi777.todoapp.R
 import com.shadi777.todoapp.data_sources.models.TodoItem
@@ -157,7 +158,7 @@ class FragmentListToDo : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             itemViewModel.getDeletedItem().collect { item ->
                 if (item == null) return@collect
-                Snackbar.make(
+                val snackbar = Snackbar.make(
                     binding.root.rootView,
                     getString(R.string.snackbar_delete_text) + " " + item.text,
                     Snackbar.LENGTH_LONG
@@ -165,7 +166,21 @@ class FragmentListToDo : Fragment() {
                     viewLifecycleOwner.lifecycleScope.launch {
                         itemViewModel.addItem(item)
                     }
-                }.show()
+                }
+
+                snackbar.addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                    override fun onShown(transientBottomBar: Snackbar?) {
+                        itemViewModel.clearDeletedItem()
+                        super.onShown(transientBottomBar)
+                    }
+
+                    override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                        itemViewModel.clearDeletedItem()
+                        super.onDismissed(transientBottomBar, event)
+                    }
+                })
+
+                snackbar.show()
             }
         }
     }
