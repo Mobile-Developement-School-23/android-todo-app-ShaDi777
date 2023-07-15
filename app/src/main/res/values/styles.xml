@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="large_title_text">
 
+    <style name="large_title_text">
         <item name="fontFamily">@font/roboto</item>
         <item name="android:textSize">32sp</item>
         <item name="lineHeight">38sp</item>
@@ -38,4 +38,39 @@
         <item name="android:textColor">@color/label_tertiary</item>
         <item name="android:fontWeight">400</item>
     </style>
+
+
+    <!-- Bottom sheet dialog style -->
+    <style name="BottomSheetDialogTheme" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="backgroundTint">@color/back_primary</item>
+        <item name="bottomSheetStyle">@style/BottomSheetModelStyle</item>
+
+    </style>
+
+    <style name="BottomSheetModelStyle" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="shapeAppearance">@style/CustomShapeAppearanceBottomSheetDialog</item>
+        <item name="backgroundTint">@color/back_primary</item>
+    </style>
+
+    <style name="CustomShapeAppearanceBottomSheetDialog" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">32dp</item>
+        <item name="cornerSizeTopLeft">32dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+    </style>
+
+
+    <!-- Toggle Group style -->
+    <style name="ToggleButtonStyle" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="colorContainer">@color/back_primary</item>
+        <item name="colorOnContainer">@color/label_primary</item>
+
+        <item name="strokeColor">@color/support_separator</item>
+
+        <item name="android:textAppearance">@style/subhead_text</item>
+    </style>
+
+
 </resources>

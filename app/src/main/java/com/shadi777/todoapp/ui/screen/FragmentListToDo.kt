@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
@@ -65,6 +66,11 @@ class FragmentListToDo : Fragment() {
         initDataObserver()
         initVisibilityChanger()
         initSnackbar()
+
+        binding.imageSettings.setOnClickListener {
+            val settings = FragmentSettings()
+            settings.show(requireFragmentManager(), settings.getTag());
+        }
 
         binding.buttonAddTask.setOnClickListener {
             itemViewModel.selectItem(null)

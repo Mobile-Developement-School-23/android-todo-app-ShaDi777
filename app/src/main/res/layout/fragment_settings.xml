@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:backgroundTint="@color/back_primary"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/textViewChooseMode"
+        style="@style/body_text"
+        android:textColor="@color/label_primary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/choose_theme"
+        app:layout_constraintTop_toTopOf="parent"
+        android:paddingStart="16dp"
+        />
+
+
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/modeSelection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="?attr/materialButtonToggleGroupStyle"
+
+        app:singleSelection="true"
+        app:layout_constraintTop_toBottomOf="@id/textViewChooseMode"
+        android:paddingTop="10dp">
+
+        <Button
+            style="@style/ToggleButtonStyle"
+            android:backgroundTint="@color/button_back"
+            android:textColor="@color/text_inverse"
+            app:cornerRadius="20dp"
+
+            android:id="@+id/lightMode"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/light_mode"/>
+        <Button
+            style="@style/ToggleButtonStyle"
+            android:backgroundTint="@color/button_back"
+            android:textColor="@color/text_inverse"
+            app:cornerRadius="20dp"
+
+            android:id="@+id/darkMode"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/dark_mode"/>
+        <Button
+            style="@style/ToggleButtonStyle"
+            android:backgroundTint="@color/button_back"
+            android:textColor="@color/text_inverse"
+            app:cornerRadius="20dp"
+
+            android:id="@+id/systemMode"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/system_mode"/>
+
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

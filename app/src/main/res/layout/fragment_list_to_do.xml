@@ -32,7 +32,7 @@
                 app:collapsedTitleTextColor="@color/label_primary"
                 app:expandedTitleMarginStart="70dp"
                 app:expandedTitleMarginBottom="44dp"
-                >
+                app:collapsedTitleGravity="center">
 
                 <!--android:layout_height="?attr/actionBarSize"-->
                 <androidx.appcompat.widget.Toolbar
@@ -40,6 +40,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     app:layout_collapseMode="pin" />
+
+                <ImageView
+                    android:id="@+id/imageSettings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_settings"
+                    app:tint="@color/color_gray"
+                    android:layout_gravity="bottom|start"
+                    android:layout_marginStart="32dp"
+                    app:layout_collapseMode="pin"
+                    android:layout_marginBottom="18dp"
+                    />
 
                 <TextView
                     android:id="@+id/textViewDone"
@@ -105,7 +117,6 @@
             android:layout_margin="16dp"
 
             android:contentDescription="@string/add_task_button" />
-
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

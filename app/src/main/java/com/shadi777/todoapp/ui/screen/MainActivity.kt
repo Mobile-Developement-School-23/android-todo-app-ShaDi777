@@ -12,6 +12,7 @@ import com.shadi777.todoapp.data_sources.models.TodoItemViewModel
 import com.shadi777.todoapp.data_sources.models.TodoListViewModel
 import com.shadi777.todoapp.databinding.ActivityMainBinding
 import com.shadi777.todoapp.network.RefreshWorker
+import com.shadi777.todoapp.ui.ThemeMode
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
@@ -33,6 +34,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeMode.setCurrentMode(this, ThemeMode.getCurrentMode(context = this))
+
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

@@ -18,6 +18,12 @@
     <string name="edit_text_hint">What needs to be done…</string>
     <string name="add_task_button">Add task</string>
 
+    <!-- Settings screen -->
+    <string name="choose_theme">Choose the app theme:</string>
+    <string name="light_mode">Light</string>
+    <string name="dark_mode">Dark</string>
+    <string name="system_mode">System</string>
+
     <!-- Network info -->
     <string name="sync_error"> Synchronization error</string>
     <string name="auth_error"> Authorization error</string>
@@ -27,7 +33,11 @@
     <string name="internet_found"> Connected to the internet </string>
     <string name="internet_not_found"> No internet connection </string>
 
+    <!-- Shared Preferences keys -->
+    <string name="settings_key" translatable="false">settings_key</string>
+    <string name="theme_mode_key" translatable="false">theme_mode_key</string>
 
+    <!-- Arrays -->
     <string-array name="priorities">
         <item>Low</item>
         <item>Default</item>
