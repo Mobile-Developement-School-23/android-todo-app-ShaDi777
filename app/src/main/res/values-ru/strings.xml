@@ -30,9 +30,9 @@
     <string name="internet_not_found">Нет подключения к интернету</string>
 
     <string-array name="priorities">
-        <item>Обычный</item>
-        <item>Низкий</item>
-        <item>Высокий</item>
+        <item>Низкая</item>
+        <item>Обычная</item>
+        <item>Высокая</item>
     </string-array>
 
     <string-array name="MONTHS">

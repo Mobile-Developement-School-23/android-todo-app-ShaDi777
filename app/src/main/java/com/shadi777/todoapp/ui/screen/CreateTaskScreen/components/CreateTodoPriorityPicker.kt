@@ -18,12 +18,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shadi777.todoapp.R
 import com.shadi777.todoapp.data_sources.models.Priority
 import com.shadi777.todoapp.data_sources.models.TodoItem
+import com.shadi777.todoapp.ui.core.AppTheme
 import com.shadi777.todoapp.ui.core.ExtendedTheme
-import com.shadi777.todoapp.ui.screen.CreateTaskScreen.model.TodoAction
+import java.util.Date
+import java.util.UUID
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -42,7 +45,6 @@ fun openBottomSheet(
 @Composable
 fun CreateTodoPriorityPicker(
     todoItem: TodoItem,
-    onAction: (TodoAction) -> Unit,
     sheetState: ModalBottomSheetState
 ) {
     var clicked: Boolean by remember { mutableStateOf(false) }
@@ -74,6 +76,51 @@ fun CreateTodoPriorityPicker(
                 else
                     ExtendedTheme.colors.labelTertiary,
             style = ExtendedTheme.typography.subhead
+        )
+    }
+}
+
+
+@OptIn(ExperimentalMaterialApi::class)
+@Preview()
+@Composable
+private fun PriorityPickerPreview() {
+    AppTheme(darkTheme = false) {
+        val sheetState = rememberTodoBottomSheetState()
+        CreateTodoPriorityPicker(
+            todoItem =
+                TodoItem(
+                    id = UUID.randomUUID().toString(),
+                    text = "Has text",
+                    priority = Priority.Default,
+                    isDone = false,
+                    color = null,
+                    createDate = Date().time,
+                    changeDate = Date().time
+                ),
+            sheetState = sheetState
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Preview(locale = "ru")
+@Composable
+private fun PriorityPicker2Preview() {
+    AppTheme(darkTheme = false) {
+        val sheetState = rememberTodoBottomSheetState()
+        CreateTodoPriorityPicker(
+            todoItem =
+            TodoItem(
+                id = UUID.randomUUID().toString(),
+                text = "Has text",
+                priority = Priority.High,
+                isDone = false,
+                color = null,
+                createDate = Date().time,
+                changeDate = Date().time
+            ),
+            sheetState = sheetState
         )
     }
 }

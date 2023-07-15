@@ -12,8 +12,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shadi777.todoapp.R
+import com.shadi777.todoapp.ui.core.AppTheme
 import com.shadi777.todoapp.ui.core.ExtendedTheme
 import com.shadi777.todoapp.ui.screen.CreateTaskScreen.model.TodoAction
 
@@ -45,6 +47,31 @@ fun CreateTodoDeleteButton(
         Text(
             text = stringResource(R.string.delete_button),
             style = ExtendedTheme.typography.body
+        )
+    }
+}
+
+
+@Preview
+@Composable
+private fun DeleteButtonEnabledPreview() {
+    AppTheme(darkTheme = false) {
+        CreateTodoDeleteButton(
+            isUpdating = true,
+            onAction = {},
+            returnAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun DeleteButtonDisabledPreview() {
+    AppTheme(darkTheme = false) {
+        CreateTodoDeleteButton(
+            isUpdating = false,
+            onAction = {},
+            returnAction = {}
         )
     }
 }

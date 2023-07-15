@@ -10,10 +10,15 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.shadi777.todoapp.data_sources.models.Priority
 import com.shadi777.todoapp.data_sources.models.TodoItem
+import com.shadi777.todoapp.ui.core.AppTheme
 import com.shadi777.todoapp.ui.core.ExtendedTheme
 import com.shadi777.todoapp.ui.screen.CreateTaskScreen.model.TodoAction
+import java.util.Date
+import java.util.UUID
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -59,7 +64,6 @@ fun CreateTodoScreen(
 
                     CreateTodoPriorityPicker(
                         todoItem = todoItem,
-                        onAction = onAction,
                         sheetState = sheetState
                     )
 
@@ -83,5 +87,52 @@ fun CreateTodoScreen(
                 }
             }
         }
+    }
+}
+
+
+@Preview
+@Composable
+private fun ScreenLightPreview() {
+    AppTheme(darkTheme = false) {
+        CreateTodoScreen(
+            isUpdating = true,
+            todoItem =
+                TodoItem(
+                    id = UUID.randomUUID().toString(),
+                    text = "This is task text",
+                    priority = Priority.High,
+                    isDone = false,
+                    color = null,
+                    createDate = Date().time,
+                    changeDate = Date().time,
+                    deadlineDate = Date().time + 86_400_000
+                ),
+            onAction = {},
+            returnAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun ScreenDarkPreview() {
+    AppTheme(darkTheme = true) {
+        CreateTodoScreen(
+            isUpdating = true,
+            todoItem =
+            TodoItem(
+                id = UUID.randomUUID().toString(),
+                text = "This is task text",
+                priority = Priority.High,
+                isDone = false,
+                color = null,
+                createDate = Date().time,
+                changeDate = Date().time,
+                deadlineDate = Date().time + 86_400_000
+            ),
+            onAction = {},
+            returnAction = {}
+        )
     }
 }

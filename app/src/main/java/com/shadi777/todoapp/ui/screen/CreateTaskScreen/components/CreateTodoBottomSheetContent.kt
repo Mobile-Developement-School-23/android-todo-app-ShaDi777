@@ -2,8 +2,6 @@ package com.shadi777.todoapp.ui.screen.CreateTaskScreen.components
 
 
 import androidx.compose.animation.Animatable
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.repeatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
@@ -22,7 +20,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,11 +27,12 @@ import androidx.compose.ui.unit.dp
 import com.shadi777.todoapp.R
 import com.shadi777.todoapp.data_sources.models.Priority
 import com.shadi777.todoapp.data_sources.models.TodoItem
+import com.shadi777.todoapp.ui.core.AppTheme
 import com.shadi777.todoapp.ui.core.ExtendedTheme
 import com.shadi777.todoapp.ui.screen.CreateTaskScreen.model.TodoAction
-import kotlinx.coroutines.cancelChildren
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.Date
+import java.util.UUID
 
 
 @Composable
@@ -103,4 +101,45 @@ fun CreateTodoBottomSheetContent(
 
 
     Spacer(modifier = Modifier.height(6.dp))
+}
+
+
+@Preview
+@Composable
+private fun BottomSheetContentHighPriorityPreview() {
+    AppTheme(darkTheme = false) {
+        CreateTodoBottomSheetContent(
+            todoItem =
+                TodoItem(
+                    id = UUID.randomUUID().toString(),
+                    text = "Has text",
+                    priority = Priority.High,
+                    isDone = false,
+                    color = null,
+                    createDate = Date().time,
+                    changeDate = Date().time
+                ),
+            onAction = {}
+        )
+    }
+}
+
+@Preview(locale = "ru")
+@Composable
+private fun BottomSheetContentDefaultPriorityPreview() {
+    AppTheme(darkTheme = true) {
+        CreateTodoBottomSheetContent(
+            todoItem =
+            TodoItem(
+                id = UUID.randomUUID().toString(),
+                text = "Has text",
+                priority = Priority.Default,
+                isDone = false,
+                color = null,
+                createDate = Date().time,
+                changeDate = Date().time
+            ),
+            onAction = {}
+        )
+    }
 }

@@ -28,19 +28,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
-import com.google.android.material.datepicker.CalendarConstraints
 import com.shadi777.todoapp.R
+import com.shadi777.todoapp.data_sources.models.Priority
 import com.shadi777.todoapp.data_sources.models.TodoItem
+import com.shadi777.todoapp.ui.core.AppTheme
 import com.shadi777.todoapp.ui.core.ExtendedTheme
 import com.shadi777.todoapp.ui.screen.CreateTaskScreen.model.TodoAction
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import java.util.Date
+import java.util.UUID
 
 
 @Composable
@@ -178,5 +180,71 @@ private fun DatePicker(
                 )
             )
         }
+    }
+}
+
+
+@Preview(locale = "ru")
+@Composable
+private fun DatePickerDialogPreview() {
+    AppTheme(darkTheme = false) {
+        DatePicker(
+            todoItem =
+                TodoItem(
+                    id = UUID.randomUUID().toString(),
+                    text = "Has text",
+                    priority = Priority.Default,
+                    isDone = false,
+                    color = null,
+                    createDate = Date().time,
+                    changeDate = Date().time,
+                    deadlineDate = Date().time + 86400000
+                ),
+            open = true,
+            closePicker = {},
+            onAction = {}
+        )
+    }
+}
+
+@Preview(locale = "ru")
+@Composable
+private fun DatePickerEnabledPreview() {
+    AppTheme(darkTheme = false) {
+        CreateTodoDatePicker(
+            todoItem =
+                TodoItem(
+                    id = UUID.randomUUID().toString(),
+                    text = "Has text",
+                    priority = Priority.Default,
+                    isDone = false,
+                    color = null,
+                    createDate = Date().time,
+                    changeDate = Date().time,
+                    deadlineDate = Date().time + 86400000
+                ),
+            onAction = {}
+        )
+    }
+}
+
+@Preview(locale = "ru")
+@Composable
+private fun DatePickerDisabledPreview() {
+    AppTheme(darkTheme = false) {
+        CreateTodoDatePicker(
+            todoItem =
+            TodoItem(
+                id = UUID.randomUUID().toString(),
+                text = "Has text",
+                priority = Priority.Default,
+                isDone = false,
+                color = null,
+                createDate = Date().time,
+                changeDate = Date().time,
+                deadlineDate = null
+            ),
+            onAction = {}
+        )
     }
 }
