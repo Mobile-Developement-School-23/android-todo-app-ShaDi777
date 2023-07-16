@@ -20,6 +20,7 @@
     <string name="add_task_button">Добавить дело</string>
 
     <!-- Network info -->
+    <string name="select_time">Выберите время</string>
     <string name="choose_theme">Выберите тему приложения:</string>
     <string name="sync_error">Ошибка синхронизации</string>
     <string name="auth_error">Ошибка авторизации</string>

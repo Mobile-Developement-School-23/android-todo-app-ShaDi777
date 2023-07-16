@@ -17,6 +17,7 @@
     <string name="finish_until">Finish until</string>
     <string name="edit_text_hint">What needs to be done…</string>
     <string name="add_task_button">Add task</string>
+    <string name="select_time">Select time</string>
 
     <!-- Settings screen -->
     <string name="choose_theme">Choose the app theme:</string>

@@ -7,61 +7,79 @@
     android:backgroundTint="@color/back_primary"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/dragHandle"
+        android:layout_width="35dp"
+        android:layout_height="3dp"
+        android:layout_marginHorizontal="0dp"
+        app:dividerColor="@color/support_separator"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp"/>
+
+
     <TextView
         android:id="@+id/textViewChooseMode"
         style="@style/body_text"
-        android:textColor="@color/label_primary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
         android:text="@string/choose_theme"
-        app:layout_constraintTop_toTopOf="parent"
-        android:paddingStart="16dp"
-        />
+        android:textColor="@color/label_primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dragHandle" />
 
 
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/modeSelection"
+        style="?attr/materialButtonToggleGroupStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="?attr/materialButtonToggleGroupStyle"
 
-        app:singleSelection="true"
+        android:paddingTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textViewChooseMode"
-        android:paddingTop="10dp">
+        app:singleSelection="true">
 
         <Button
-            style="@style/ToggleButtonStyle"
-            android:backgroundTint="@color/button_back"
-            android:textColor="@color/text_inverse"
-            app:cornerRadius="20dp"
-
             android:id="@+id/lightMode"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="@string/light_mode"/>
-        <Button
             style="@style/ToggleButtonStyle"
-            android:backgroundTint="@color/button_back"
-            android:textColor="@color/text_inverse"
-            app:cornerRadius="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
 
+            android:layout_weight="1"
+            android:backgroundTint="@color/button_back"
+            android:text="@string/light_mode"
+            android:textColor="@color/text_inverse"
+            app:cornerRadius="20dp" />
+
+        <Button
             android:id="@+id/darkMode"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="@string/dark_mode"/>
-        <Button
             style="@style/ToggleButtonStyle"
-            android:backgroundTint="@color/button_back"
-            android:textColor="@color/text_inverse"
-            app:cornerRadius="20dp"
-
-            android:id="@+id/systemMode"
             android:layout_width="match_parent"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="@string/system_mode"/>
+
+            android:layout_weight="1"
+            android:backgroundTint="@color/button_back"
+            android:text="@string/dark_mode"
+            android:textColor="@color/text_inverse"
+            app:cornerRadius="20dp" />
+
+        <Button
+            android:id="@+id/systemMode"
+            style="@style/ToggleButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_weight="1"
+            android:backgroundTint="@color/button_back"
+            android:text="@string/system_mode"
+            android:textColor="@color/text_inverse"
+            app:cornerRadius="20dp" />
 
     </com.google.android.material.button.MaterialButtonToggleGroup>
 

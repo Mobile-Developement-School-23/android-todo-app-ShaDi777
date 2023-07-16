@@ -2,6 +2,8 @@ package com.shadi777.todoapp.ui.screen.CreateTaskScreen.components
 
 
 import androidx.compose.animation.Animatable
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.repeatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
@@ -30,6 +32,7 @@ import com.shadi777.todoapp.data_sources.models.TodoItem
 import com.shadi777.todoapp.ui.core.AppTheme
 import com.shadi777.todoapp.ui.core.ExtendedTheme
 import com.shadi777.todoapp.ui.screen.CreateTaskScreen.model.TodoAction
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 import java.util.Date
 import java.util.UUID
@@ -53,8 +56,8 @@ fun CreateTodoBottomSheetContent(
 
     val border = BorderStroke(1.dp, ExtendedTheme.colors.supportSeparator)
     val red = ExtendedTheme.colors.red
-    val labelReversedColor = ExtendedTheme.colors.labelPrimaryReversed
-    val selectedColor = remember { Animatable(labelReversedColor) }
+    val blue = ExtendedTheme.colors.blue
+    val selectedColor = remember { Animatable(blue) }
 
     Column(
         modifier = Modifier
@@ -78,24 +81,22 @@ fun CreateTodoBottomSheetContent(
                 }
 
                 if (newPriority != todoItem.priority) {
-                    //scope.coroutineContext.cancelChildren()
+                    onAction(TodoAction.UpdatePriority(newPriority))
+                    todoItem.priority = newPriority
+                    scope.coroutineContext.cancelChildren()
                     scope.launch {
                         if (newPriority == Priority.High) {
-                            //selectedColor.animateTo(Red, repeatable(3, tween(200), RepeatMode.Restart))
-                            selectedColor.animateTo(red, tween(200))
-                        } else {
-                            selectedColor.animateTo(labelReversedColor, tween(200))
+                            selectedColor.animateTo(red, repeatable(1, tween(800), RepeatMode.Restart))
                         }
+                        selectedColor.animateTo(blue, tween(800))
                     }
-
-                    onAction(TodoAction.UpdatePriority(newPriority))
                 }
             },
             modifier = Modifier
                 .border(border, CircleShape)
                 .fillMaxWidth(0.9f)
                 .height(80.dp),
-            selectedColor = selectedColor.value
+            selectionColor = selectedColor.value
         )
     }
 

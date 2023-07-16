@@ -1,6 +1,7 @@
 package com.shadi777.todoapp.data_sources.models
 
 import android.app.Notification.Action
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -15,6 +16,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.ZoneId
+import java.time.ZoneOffset
+import java.time.temporal.ChronoField
 import java.util.Date
 import java.util.UUID
 
@@ -127,6 +132,20 @@ class TodoItemViewModel
             is TodoAction.UpdateText -> selectedItem.update { it.copy(text = action.text) }
             is TodoAction.UpdatePriority -> selectedItem.update { it.copy(priority = action.priority) }
             is TodoAction.UpdateDate -> selectedItem.update { it.copy(deadlineDate = action.date) }
+            is TodoAction.UpdateTime -> {
+                val currentDeadlineDate = selectedItem.value.deadlineDate ?: 0
+                var newDeadlineDate: Long = Instant.ofEpochMilli(currentDeadlineDate)
+                                                .atZone(ZoneId.systemDefault())
+                                                .toLocalDate().atStartOfDay(ZoneId.systemDefault())
+                                                .toEpochSecond() * 1000
+                if (action.second == 1) {
+                    newDeadlineDate += action.hour * 60L * 60 * 1000 + action.minute * 60L * 1000 + action.second * 1000L
+                }
+                selectedItem.update {
+                    it.copy(deadlineDate = newDeadlineDate)
+                }
+            }
+
             is TodoAction.SaveTask -> {
                 if (isUpdating) updateItem(item = selectedItem.value)
                 else addItem(item = selectedItem.value)
