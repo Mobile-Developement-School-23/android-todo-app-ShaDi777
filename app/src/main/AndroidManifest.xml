@@ -18,8 +18,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ToDoApp"
-        tools:targetApi="31"
+        tools:targetApi="33"
         android:name=".App">
+
+        <receiver
+            android:name=".notifications.AlarmReceiver"
+            android:enabled="true"
+            android:exported="true" />
 
         <activity android:name=".ui.screen.MainActivity" android:exported="true">
             <intent-filter>

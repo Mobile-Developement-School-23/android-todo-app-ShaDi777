@@ -2,8 +2,7 @@ package com.shadi777.todoapp.ui
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.ContextCompat.getString
-import com.shadi777.todoapp.R
+import com.shadi777.todoapp.util.Constants
 
 enum class ThemeMode {
     DARK, LIGHT, SYSTEM;
@@ -19,12 +18,12 @@ enum class ThemeMode {
 
         fun getCurrentMode(context: Context): ThemeMode {
             val sharedPref = context.getSharedPreferences(
-                getString(context, R.string.settings_key),
+                Constants.SETTINGS_KEY,
                 Context.MODE_PRIVATE
             )
             val defaultMode = SYSTEM
             val mode = sharedPref.getInt(
-                getString(context, R.string.theme_mode_key),
+                Constants.THEME_MODE_KEY,
                 defaultMode.ordinal
             )
             return values()[mode]
@@ -32,11 +31,11 @@ enum class ThemeMode {
 
         fun setCurrentMode(context: Context, mode: ThemeMode) {
             val sharedPref = context.getSharedPreferences(
-                getString(context, R.string.settings_key),
+                Constants.SETTINGS_KEY,
                 Context.MODE_PRIVATE
             )
             with(sharedPref.edit()) {
-                putInt(getString(context, R.string.theme_mode_key), mode.ordinal)
+                putInt(Constants.THEME_MODE_KEY, mode.ordinal)
                 apply()
             }
             applyTheme(mode)

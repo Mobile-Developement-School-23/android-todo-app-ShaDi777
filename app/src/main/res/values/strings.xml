@@ -38,10 +38,7 @@
     <string name="restore_button">Restore</string>
     <string name="snackbar_delete_text">Deleted task </string>
 
-    <!-- Shared Preferences keys -->
-    <string name="settings_key" translatable="false">settings_key</string>
-    <string name="theme_mode_key" translatable="false">theme_mode_key</string>
-
+    <string name="notifications_disabled">Notifications disabled</string>
     <!-- Arrays -->
     <string-array name="priorities">
         <item>Low</item>

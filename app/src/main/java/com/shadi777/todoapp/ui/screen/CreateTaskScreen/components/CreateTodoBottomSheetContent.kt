@@ -81,8 +81,6 @@ fun CreateTodoBottomSheetContent(
                 }
 
                 if (newPriority != todoItem.priority) {
-                    onAction(TodoAction.UpdatePriority(newPriority))
-                    todoItem.priority = newPriority
                     scope.coroutineContext.cancelChildren()
                     scope.launch {
                         if (newPriority == Priority.High) {
@@ -90,6 +88,7 @@ fun CreateTodoBottomSheetContent(
                         }
                         selectedColor.animateTo(blue, tween(800))
                     }
+                    onAction(TodoAction.UpdatePriority(newPriority))
                 }
             },
             modifier = Modifier
