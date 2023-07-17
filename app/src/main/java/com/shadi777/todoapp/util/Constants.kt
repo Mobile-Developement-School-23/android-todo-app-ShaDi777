@@ -14,6 +14,7 @@ object Constants {
     const val SETTINGS_KEY = "SETTINGS_KEY"
     const val THEME_MODE_KEY = "THEME_MODE_KEY"
     const val NOTIFICATION_KEY = "NOTIFICATION_KEY"
+    const val TASK_ID_KEY = "TASK_ID_KEY"
 
     const val CHANNEL_ID = "CHANNEL_ID"
     const val CHANNEL_NAME = "CHANNEL_NAME"

@@ -2,9 +2,11 @@ package com.shadi777.todoapp.ui.screen
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,6 +25,7 @@ import com.shadi777.todoapp.databinding.ActivityMainBinding
 import com.shadi777.todoapp.network.RefreshWorker
 import com.shadi777.todoapp.ui.ThemeMode
 import com.shadi777.todoapp.util.Constants
+import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
@@ -54,6 +57,15 @@ class MainActivity : AppCompatActivity() {
         setUpdates()
         registerPermissionListener()
         checkNotificationPermission()
+
+        if (intent != null) {
+            val id = intent.getStringExtra(Constants.TASK_ID_KEY) ?: ""
+            if (id.isEmpty()) return
+            runBlocking {
+                itemViewModel.selectItem(id)
+            }
+            itemViewModel.fromIntent = true
+        }
     }
 
     private fun setUpdates() {

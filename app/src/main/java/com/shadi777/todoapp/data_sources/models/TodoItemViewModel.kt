@@ -57,6 +57,7 @@ class TodoItemViewModel
     }
 
     var isUpdating = false
+    var fromIntent = false
 
     private val selectedItem: MutableStateFlow<TodoItem> =
         MutableStateFlow(

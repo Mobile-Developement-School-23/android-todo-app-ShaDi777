@@ -211,10 +211,15 @@ class FragmentCreateToDo : Fragment() {
                         Constants.INTENT_ID_IMPORTANCE_KEY,
                         todoItem.priority.toString()
                     )
-                    .addFlags(Intent.FLAG_RECEIVER_FOREGROUND)
+                    .addFlags(
+                        Intent.FLAG_RECEIVER_FOREGROUND or
+                        Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                        Intent.FLAG_ACTIVITY_NEW_TASK
+                    )
+                // .setComponent()
                 PendingIntent.getBroadcast(
                     context,
-                    id,
+                    System.currentTimeMillis().toInt(),
                     intent,
                     PendingIntent.FLAG_IMMUTABLE
                 )
