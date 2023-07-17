@@ -5,8 +5,8 @@ import com.shadi777.todoapp.database.TodoItemEntity
 import java.io.Serializable
 
 enum class Priority {
-    @SerializedName("basic") Default,
     @SerializedName("low") Low,
+    @SerializedName("basic") Default,
     @SerializedName("important") High
 }
 

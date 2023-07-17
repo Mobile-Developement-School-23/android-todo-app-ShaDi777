@@ -3,6 +3,7 @@
     <color name="support_separator">#33FFFFFF</color>
     <color name="support_overlay">#52000000</color>
     <color name="label_primary">#FFFFFF</color>
+    <color name="label_primary_inverse">#000000</color>
     <color name="label_secondary">#99FFFFFF</color>
     <color name="label_tertiary">#66FFFFFF</color>
     <color name="label_disable">#26FFFFFF</color>
@@ -11,6 +12,7 @@
     <color name="color_blue">#0A84FF</color>
     <color name="color_gray">#8E8E93</color>
     <color name="color_gray_light">#48484A</color>
+    <color name="color_scrim">#200A84FF</color>
     <color name="color_white">#FFFFFF</color>
     <color name="back_primary">#161618</color>
     <color name="back_secondary">#252528</color>

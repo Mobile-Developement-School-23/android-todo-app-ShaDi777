@@ -5,7 +5,7 @@ import com.shadi777.todoapp.di.modules.AppModule
 import com.shadi777.todoapp.di.modules.DatabaseModule
 import com.shadi777.todoapp.di.modules.RepositoryModule
 import com.shadi777.todoapp.network.RetrofitInstance
-import com.shadi777.todoapp.screen.MainActivity
+import com.shadi777.todoapp.ui.screen.MainActivity
 import dagger.Component
 
 @AppScope

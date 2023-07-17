@@ -1,20 +1,29 @@
-package com.shadi777.todoapp.screen
+package com.shadi777.todoapp.ui.screen
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.shadi777.todoapp.R
 import com.shadi777.todoapp.data_sources.models.TodoItem
 import com.shadi777.todoapp.data_sources.models.TodoItemViewModel
 import com.shadi777.todoapp.data_sources.models.TodoListViewModel
 import com.shadi777.todoapp.databinding.FragmentListToDoBinding
+import com.shadi777.todoapp.notifications.AlarmReceiver
 import com.shadi777.todoapp.recyclerview.TodoAdapter
 import com.shadi777.todoapp.recyclerview.TodoAdapter.onItemInteractListener
 import com.shadi777.todoapp.util.Constants
@@ -61,10 +70,24 @@ class FragmentListToDo : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if (itemViewModel.fromIntent) {
+            findNavController().navigate(
+                R.id.action_fragmentListToDo_to_fragmentCreateToDo
+            )
+            itemViewModel.fromIntent = false
+            return
+        }
+
         initRecyclerView()
         initDataObserver()
         initVisibilityChanger()
-        initSnackbar()
+        initConnectionSnackbar()
+        initDeleteSnackbar()
+
+        binding.imageSettings.setOnClickListener {
+            val settings = FragmentSettings()
+            settings.show(requireFragmentManager(), settings.getTag());
+        }
 
         binding.buttonAddTask.setOnClickListener {
             itemViewModel.selectItem(null)
@@ -123,7 +146,7 @@ class FragmentListToDo : Fragment() {
         }
     }
 
-    private fun initSnackbar() {
+    private fun initConnectionSnackbar() {
         viewLifecycleOwner.lifecycleScope.launch {
             listViewModel.getStatusCode().collect { statusCode ->
                 if (statusCode == Constants.OK_STATUS_CODE) return@collect
@@ -142,6 +165,76 @@ class FragmentListToDo : Fragment() {
                         listViewModel.refreshData()
                     }
                 }.show()
+            }
+        }
+    }
+
+    private fun initDeleteSnackbar() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            itemViewModel.getDeletedItem().collect { item ->
+                if (item == null) return@collect
+                val snackbar = Snackbar.make(
+                    binding.root.rootView,
+                    getString(R.string.snackbar_delete_text) + " " + item.text,
+                    Snackbar.LENGTH_LONG
+                ).setAction(getString(R.string.restore_button)) {
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        itemViewModel.addItem(item)
+
+                        val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                        val alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
+                            intent
+                                .putExtra(Constants.INTENT_ID_KEY, item.id)
+                                .putExtra(Constants.INTENT_ID_TITLE_KEY, item.text)
+                                .putExtra(
+                                    Constants.INTENT_ID_IMPORTANCE_KEY,
+                                    item.priority.toString()
+                                )
+                                .addFlags(
+                                    Intent.FLAG_RECEIVER_FOREGROUND or
+                                            Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                                            Intent.FLAG_ACTIVITY_NEW_TASK
+                                )
+
+                            PendingIntent.getBroadcast(
+                                context,
+                                item.id.hashCode(),
+                                intent,
+                                PendingIntent.FLAG_IMMUTABLE
+                            )
+                        }
+                        val time = item.deadlineDate
+                        if (time != null) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                alarmManager.setExactAndAllowWhileIdle(
+                                    AlarmManager.RTC_WAKEUP,
+                                    time,
+                                    alarmIntent
+                                )
+                            } else {
+                                alarmManager.setExact(
+                                    AlarmManager.RTC_WAKEUP,
+                                    time,
+                                    alarmIntent
+                                )
+                            }
+                        }
+                    }
+                }
+
+                snackbar.addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                    override fun onShown(transientBottomBar: Snackbar?) {
+                        itemViewModel.clearDeletedItem()
+                        super.onShown(transientBottomBar)
+                    }
+
+                    override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                        itemViewModel.clearDeletedItem()
+                        super.onDismissed(transientBottomBar, event)
+                    }
+                })
+
+                snackbar.show()
             }
         }
     }

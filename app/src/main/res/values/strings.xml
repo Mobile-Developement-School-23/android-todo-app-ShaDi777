@@ -9,6 +9,7 @@
     <!-- Create new task activity -->
     <string name="save_button">Save</string>
     <string name="delete_button">Delete</string>
+    <string name="cancel_button">Cancel</string>
     <string name="priority">Priority</string>
     <string name="no_priority">No</string>
     <string name="low_priority">Low</string>
@@ -16,6 +17,13 @@
     <string name="finish_until">Finish until</string>
     <string name="edit_text_hint">What needs to be done…</string>
     <string name="add_task_button">Add task</string>
+    <string name="select_time">Select time</string>
+
+    <!-- Settings screen -->
+    <string name="choose_theme">Choose the app theme:</string>
+    <string name="light_mode">Light</string>
+    <string name="dark_mode">Dark</string>
+    <string name="system_mode">System</string>
 
     <!-- Network info -->
     <string name="sync_error"> Synchronization error</string>
@@ -26,10 +34,15 @@
     <string name="internet_found"> Connected to the internet </string>
     <string name="internet_not_found"> No internet connection </string>
 
+    <!-- Restore Snackbar -->
+    <string name="restore_button">Restore</string>
+    <string name="snackbar_delete_text">Deleted task </string>
 
+    <string name="notifications_disabled">Notifications disabled</string>
+    <!-- Arrays -->
     <string-array name="priorities">
-        <item>Default</item>
         <item>Low</item>
+        <item>Default</item>
         <item>High</item>
     </string-array>
 
