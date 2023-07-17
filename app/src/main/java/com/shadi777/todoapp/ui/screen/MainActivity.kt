@@ -25,6 +25,7 @@ import com.shadi777.todoapp.databinding.ActivityMainBinding
 import com.shadi777.todoapp.network.RefreshWorker
 import com.shadi777.todoapp.ui.ThemeMode
 import com.shadi777.todoapp.util.Constants
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 
@@ -61,9 +62,7 @@ class MainActivity : AppCompatActivity() {
         if (intent != null) {
             val id = intent.getStringExtra(Constants.TASK_ID_KEY) ?: ""
             if (id.isEmpty()) return
-            runBlocking {
-                itemViewModel.selectItem(id)
-            }
+            itemViewModel.selectItem(id)
             itemViewModel.fromIntent = true
         }
     }

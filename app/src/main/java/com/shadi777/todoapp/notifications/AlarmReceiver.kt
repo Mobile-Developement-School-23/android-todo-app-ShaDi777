@@ -22,15 +22,18 @@ class AlarmReceiver : BroadcastReceiver() {
         val priority = intent.getStringExtra(Constants.INTENT_ID_IMPORTANCE_KEY) ?: "Unknown Priority"
         val priorityText = context.getString(R.string.priority) + ":" + priority
 
-        val resultIntent = Intent(context, MainActivity::class.java).putExtra(Constants.TASK_ID_KEY, id)
-        val resultPendingIntent: PendingIntent? = TaskStackBuilder.create(context).run {
-            addNextIntentWithParentStack(resultIntent)
-            getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        val notifyIntent = Intent(context, MainActivity::class.java).apply {
+            putExtra(Constants.TASK_ID_KEY, id)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK //or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
+        val notifyPendingIntent = PendingIntent.getActivity(
+            context, 0, notifyIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
 
         val notification = NotificationCompat.Builder(context, Constants.CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle(id)
+            .setContentTitle(title)
             .setContentText(priorityText)
             .setPriority(
                 when(priority) {
@@ -41,7 +44,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
             )
             //.setStyle(NotificationCompat.BigTextStyle().bigText(TEXT))
-            .setContentIntent(resultPendingIntent)
+            .setContentIntent(notifyPendingIntent)
             .setAutoCancel(true)
             .build()
 

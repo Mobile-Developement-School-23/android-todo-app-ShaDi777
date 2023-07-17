@@ -41,10 +41,8 @@ class FragmentCreateToDo : Fragment() {
     private val itemViewModel: TodoItemViewModel by lazy {
         (requireActivity() as MainActivity).itemViewModel
     }
-    private val listViewModel: TodoListViewModel by lazy {
-        (requireActivity() as MainActivity).listViewModel
-    }
 
+    private lateinit var lastKnownItem: TodoItem
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,6 +55,8 @@ class FragmentCreateToDo : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        lastKnownItem = itemViewModel.getSelectedItem().value
 
         binding.composeView.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
         binding.composeView.setContent {
@@ -199,52 +199,74 @@ class FragmentCreateToDo : Fragment() {
         }
     */
     override fun onDestroyView() {
-        // TODO cancel previous
+        addNotification()
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun addNotification() {
         val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
         lifecycleScope.launch {
             val todoItem = itemViewModel.getSelectedItem().value
-            val alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
-                intent
-                    .putExtra(Constants.INTENT_ID_KEY, todoItem.id)
-                    .putExtra(Constants.INTENT_ID_TITLE_KEY, todoItem.text)
-                    .putExtra(
-                        Constants.INTENT_ID_IMPORTANCE_KEY,
-                        todoItem.priority.toString()
-                    )
-                    .addFlags(
-                        Intent.FLAG_RECEIVER_FOREGROUND or
-                        Intent.FLAG_ACTIVITY_CLEAR_TOP or
-                        Intent.FLAG_ACTIVITY_NEW_TASK
-                    )
-                // .setComponent()
-                PendingIntent.getBroadcast(
-                    context,
-                    System.currentTimeMillis().toInt(),
-                    intent,
-                    PendingIntent.FLAG_IMMUTABLE
+            val alarmIntent = createPendingIntent(todoItem)
+
+            val isDeleted = (itemViewModel.getDeletedItem().value != null)
+            val isChanged = (todoItem != lastKnownItem) && itemViewModel.isSaving
+            
+            if (isChanged || isDeleted) {
+                alarmManager.cancel(alarmIntent)
+            }
+            if (isChanged) {
+                setNewNotification(alarmManager, alarmIntent, todoItem.deadlineDate)
+            }
+            itemViewModel.isSaving = false
+            itemViewModel.isUpdating = false
+        }
+    }
+
+    private fun createPendingIntent(todoItem: TodoItem): PendingIntent {
+        return Intent(context, AlarmReceiver::class.java).let { intent ->
+            intent
+                .putExtra(Constants.INTENT_ID_KEY, todoItem.id)
+                .putExtra(Constants.INTENT_ID_TITLE_KEY, todoItem.text)
+                .putExtra(
+                    Constants.INTENT_ID_IMPORTANCE_KEY,
+                    todoItem.priority.toString()
+                )
+                .addFlags(
+                    Intent.FLAG_RECEIVER_FOREGROUND or
+                            Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                            Intent.FLAG_ACTIVITY_NEW_TASK
+                )
+
+            PendingIntent.getBroadcast(
+                context,
+                todoItem.id.hashCode(),
+                intent,
+                PendingIntent.FLAG_IMMUTABLE
+            )
+        }
+    }
+
+    private fun setNewNotification(
+        alarmManager: AlarmManager,
+        alarmIntent: PendingIntent,
+        time: Long?
+    ) {
+        if (time != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    time,
+                    alarmIntent
+                )
+            } else {
+                alarmManager.setExact(
+                    AlarmManager.RTC_WAKEUP,
+                    time,
+                    alarmIntent
                 )
             }
-
-            if (todoItem.deadlineDate != null) {
-                val time = todoItem.deadlineDate!!
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    alarmManager.setExactAndAllowWhileIdle(
-                        AlarmManager.RTC_WAKEUP,
-                        time,
-                        alarmIntent
-                    )
-                } else {
-                    alarmManager.setExact(
-                        AlarmManager.RTC_WAKEUP,
-                        time,
-                        alarmIntent
-                    )
-                }
-                Log.d("Notification", "Now:${System.currentTimeMillis()} | Notify:$time")
-                Log.d("NotificationText", todoItem.text)
-            }
         }
-        super.onDestroyView()
-        _binding = null
     }
 }

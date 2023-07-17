@@ -69,6 +69,7 @@ class FragmentListToDo : Fragment() {
                 R.id.action_fragmentListToDo_to_fragmentCreateToDo
             )
             itemViewModel.fromIntent = false
+            return
         }
 
         initRecyclerView()

@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import okhttp3.internal.wait
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZoneOffset
@@ -58,6 +59,7 @@ class TodoItemViewModel
 
     var isUpdating = false
     var fromIntent = false
+    var isSaving = false
 
     private val selectedItem: MutableStateFlow<TodoItem> =
         MutableStateFlow(
@@ -150,6 +152,7 @@ class TodoItemViewModel
             is TodoAction.SaveTask -> {
                 if (isUpdating) updateItem(item = selectedItem.value)
                 else addItem(item = selectedItem.value)
+                isSaving = true
             }
 
             is TodoAction.DeleteTask -> {
