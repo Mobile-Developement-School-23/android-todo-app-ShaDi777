@@ -1,5 +1,10 @@
 package com.shadi777.todoapp.ui.screen
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,6 +23,7 @@ import com.shadi777.todoapp.data_sources.models.TodoItem
 import com.shadi777.todoapp.data_sources.models.TodoItemViewModel
 import com.shadi777.todoapp.data_sources.models.TodoListViewModel
 import com.shadi777.todoapp.databinding.FragmentListToDoBinding
+import com.shadi777.todoapp.notifications.AlarmReceiver
 import com.shadi777.todoapp.recyclerview.TodoAdapter
 import com.shadi777.todoapp.recyclerview.TodoAdapter.onItemInteractListener
 import com.shadi777.todoapp.util.Constants
@@ -174,6 +180,45 @@ class FragmentListToDo : Fragment() {
                 ).setAction(getString(R.string.restore_button)) {
                     viewLifecycleOwner.lifecycleScope.launch {
                         itemViewModel.addItem(item)
+
+                        val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                        val alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
+                            intent
+                                .putExtra(Constants.INTENT_ID_KEY, item.id)
+                                .putExtra(Constants.INTENT_ID_TITLE_KEY, item.text)
+                                .putExtra(
+                                    Constants.INTENT_ID_IMPORTANCE_KEY,
+                                    item.priority.toString()
+                                )
+                                .addFlags(
+                                    Intent.FLAG_RECEIVER_FOREGROUND or
+                                            Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                                            Intent.FLAG_ACTIVITY_NEW_TASK
+                                )
+
+                            PendingIntent.getBroadcast(
+                                context,
+                                item.id.hashCode(),
+                                intent,
+                                PendingIntent.FLAG_IMMUTABLE
+                            )
+                        }
+                        val time = item.deadlineDate
+                        if (time != null) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                alarmManager.setExactAndAllowWhileIdle(
+                                    AlarmManager.RTC_WAKEUP,
+                                    time,
+                                    alarmIntent
+                                )
+                            } else {
+                                alarmManager.setExact(
+                                    AlarmManager.RTC_WAKEUP,
+                                    time,
+                                    alarmIntent
+                                )
+                            }
+                        }
                     }
                 }
 
